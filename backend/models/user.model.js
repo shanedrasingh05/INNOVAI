@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -21,7 +20,8 @@ const userSchema = new mongoose.Schema({
 })
 
 
-userSchema.static.hashPassword = async function(password){
+
+userSchema.methods.hashPassword = async function(password){
     return await bcrypt.hash(password, 10)
 }
 
@@ -35,6 +35,11 @@ userSchema.methods.generateJWT = function () {
 
 
 
-const User = mongoose.model('user', userSchema);
+const User = mongoose.model('User', userSchema);
+
+User.hashPassword = async function (password) {
+  return await bcrypt.hash(password, 10);
+};
 
 export default User;
+
