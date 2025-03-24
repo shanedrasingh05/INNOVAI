@@ -1,23 +1,25 @@
+
+
 import jwt from "jsonwebtoken"
 
-
-export const authUser = async (req, res) => {
+export const authUser = async (req, res, next) => {
     try{
-        const token = req.cookies.token || req.header.authorization.split(' ')[ 1 ];
-        
+        const token = req.cookies.token || req.headers.authorization.split(' ')[ 1 ];
+
         if (!token) {
            return res.status(401).send({ error: " Unauthentication User" });
-            
+
         }
         // const token = req.header('Authorization').replace('Bearer', '')
 
-
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decoded;
-        next();
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  req.user = decoded;
+  next();
 
     }catch(error){
-        res.status(401).send({error: "Please Authentication" });
+
+        console.log(error)
+
+        res.status(401).send({error: "Unauthorized User" });
     }
 };
